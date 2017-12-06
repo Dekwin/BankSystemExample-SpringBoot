@@ -22,11 +22,38 @@ public class UserEntity {
     @OneToMany(mappedBy="owner")
     private List<WalletEntity> wallets;
 
-    @OneToMany(mappedBy="sender")
-    private List<TransferTransactionEntity> sendTransactions;
 
-    @OneToMany(mappedBy="recipient")
-    private List<TransferTransactionEntity> receiveTransactions;
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public List<WalletEntity> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<WalletEntity> wallets) {
+        this.wallets = wallets;
+    }
 
     protected UserEntity() {}
 

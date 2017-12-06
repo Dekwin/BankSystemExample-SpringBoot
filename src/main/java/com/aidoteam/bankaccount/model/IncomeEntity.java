@@ -7,16 +7,26 @@ import java.util.List;
 @Table(name = "IncomeEntity")
 public class IncomeEntity {
     @Id
-    @Column(name="ID")
+    @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
-    private String title;
+    private Long amount;
+    @Column
+    private String accountNumber;
+    @Column
+    private Long datetime;
     @Column
     private String description;
 
-    @ManyToMany(mappedBy="incomes")
-    private List<WalletEntity> wallets;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="WALLET_ID")
+    private WalletEntity wallet;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="INCOME_TYPE_ID")
+    private IncomeTypeEntity incomeType;
+
 
     public IncomeEntity() {
     }

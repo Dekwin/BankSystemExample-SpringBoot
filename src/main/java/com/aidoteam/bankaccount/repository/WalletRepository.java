@@ -6,10 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface WalletRepository extends CrudRepository<WalletEntity, Long>
+public interface WalletRepository extends CrudRepository<WalletEntity, Long> {
 
-    {
+    WalletEntity findById(Long id);
 
-        List<WalletEntity> findByLastName(String lastName);
-    }
+    List<WalletEntity> findByOwner(UserEntity owner);
+
+}
 

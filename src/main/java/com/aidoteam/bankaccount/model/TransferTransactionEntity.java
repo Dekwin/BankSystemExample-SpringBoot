@@ -12,12 +12,12 @@ public class TransferTransactionEntity {
 
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="SENDER_ID")
-    private UserEntity sender;
+    @JoinColumn(name="SENDER_WALLET_ID")
+    private WalletEntity senderWallet;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="RECIPIENT_ID")
-    private UserEntity recipient;
+    @JoinColumn(name="RECIPIENT_WALLET_ID")
+    private WalletEntity recipientWallet;
 
     @Column(nullable = false)
     private Long amount;
