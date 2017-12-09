@@ -2,7 +2,6 @@ package com.aidoteam.bankaccount.service.bank;
 
 import com.aidoteam.bankaccount.model.UserEntity;
 import com.aidoteam.bankaccount.repository.UserRepository;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
