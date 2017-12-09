@@ -14,6 +14,11 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Override
+    public void save(UserEntity userEntity) {
+        userRepository.save(userEntity);
+    }
+
+    @Override
     public List<UserEntity> findAllByFirstName(String firstName) {
         return userRepository.findAllByFirstName(firstName);
     }

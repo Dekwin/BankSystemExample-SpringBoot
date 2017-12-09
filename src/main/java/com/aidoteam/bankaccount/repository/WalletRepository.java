@@ -7,10 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface WalletRepository extends CrudRepository<WalletEntity, Long> {
-
     WalletEntity findById(Long id);
-
     List<WalletEntity> findByOwner(UserEntity owner);
-
+    WalletEntity findByIdAndOwner(Long id, UserEntity owner);
+    WalletEntity findByAccount(String account);
+    WalletEntity findByIdOrAccount(Long id, String account);
 }
 

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import java.util.List;
 
 public interface UserService {
+    void save(UserEntity userEntity);
     List<UserEntity> findAllByFirstName(String firstName);
     void create(String firstName,String lastName,String email,String password,String phone);
     UserEntity findByEmail(String email);
