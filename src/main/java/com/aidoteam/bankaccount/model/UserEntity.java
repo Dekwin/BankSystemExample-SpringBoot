@@ -16,7 +16,9 @@ public class UserEntity {
     private String lastName;
     @Column(nullable = false)
     private String email;
+    @Column
     private String password;
+    @Column
     private String phone;
 
     @OneToMany(mappedBy="owner")

@@ -27,5 +27,4 @@ public class UserController {
         List<UserEntity> users = userService.findAllByFirstName(firstName);
         return "Users found: "+users.size();
     }
-
 }
