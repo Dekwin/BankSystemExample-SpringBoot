@@ -1,8 +1,6 @@
 package com.aidoteam.bankaccount.controller.bank;
 
-import com.aidoteam.bankaccount.model.IncomeEntity;
-import com.aidoteam.bankaccount.model.TransferTransactionEntity;
-import com.aidoteam.bankaccount.model.WalletEntity;
+import com.aidoteam.bankaccount.model.*;
 import com.aidoteam.bankaccount.service.bank.IncomeService;
 import com.aidoteam.bankaccount.service.bank.UserService;
 import com.aidoteam.bankaccount.service.bank.WalletService;
@@ -55,14 +53,43 @@ public class WalletController {
 
 
     @PostMapping("/{fromWalletId}/transfer")
-    ResponseEntity makeTransferTransaction(@PathVariable Long fromWalletId,
+    ResponseEntity<TransferTransactionEntity> makeTransferTransaction(@PathVariable Long fromWalletId,
                                                                             @JsonProperty("toWalletId") Long toWalletId,
                                                                             @JsonProperty("toAccount") String toAccount,
                                                                             @JsonProperty("amount") Long amount,
                                                                             @JsonProperty("description") String description) {
-        walletService.makeTransferTransaction(fromWalletId,toWalletId, toAccount, amount,description);
-        return new ResponseEntity(HttpStatus.OK);
+        TransferTransactionEntity transferTransactionEntity = walletService.makeTransferTransaction(fromWalletId,toWalletId, toAccount, amount,description);
+        return new ResponseEntity(transferTransactionEntity,HttpStatus.OK);
     }
+
+    @PostMapping("/{fromWalletId}/payment")
+    ResponseEntity<OutcomeEntity> makePayment(@PathVariable Long fromWalletId,
+                                              @JsonProperty("toAccount") String toAccount,
+                                              @JsonProperty("amount") Long amount,
+                                              @JsonProperty("outcomeTypeId") Long outcomeTypeId,
+                                              @JsonProperty("description") String description) throws IllegalAccessException {
+        OutcomeEntity outcomeEntity = walletService.makeOutcomePayment(fromWalletId,toAccount,amount,outcomeTypeId,description);
+        return new ResponseEntity(outcomeEntity, HttpStatus.OK);
+    }
+
+    @GetMapping("/{walletId}/outcomes")
+    ResponseEntity<List<OutcomeEntity>> getOutcomesBetweenDates(@PathVariable Long walletId, @RequestParam("dateFrom") Long dateFrom, @RequestParam("dateTo") Long dateTo) throws IllegalAccessException {
+        return new ResponseEntity<>(walletService.findOutcomesByWalletIdBetweenDates(walletId,dateFrom,dateTo), HttpStatus.OK);
+    }
+    @GetMapping("/{walletId}/outcomes/{outcomeTypeId}")
+    ResponseEntity<List<OutcomeEntity>> getOutcomesByOutcomeTypeIdBetweenDates(@PathVariable Long walletId, @PathVariable Long outcomeTypeId, @RequestParam("dateFrom") Long dateFrom, @RequestParam("dateTo") Long dateTo) throws IllegalAccessException {
+        return new ResponseEntity<>(walletService.findOutcomesByWalletIdAndOutcomeTypeIdBetweenDates(walletId,outcomeTypeId,dateFrom,dateTo), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/outcome-types")
+    ResponseEntity<List<OutcomeTypeEntity>> getOutcomeTypes() throws IllegalAccessException {
+        return new ResponseEntity<>(walletService.getAllOutcomeTypes(), HttpStatus.OK);
+    }
+
+
+
 
 
 

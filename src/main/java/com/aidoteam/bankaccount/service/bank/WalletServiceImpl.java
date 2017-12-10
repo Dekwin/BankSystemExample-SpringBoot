@@ -1,13 +1,7 @@
 package com.aidoteam.bankaccount.service.bank;
 
-import com.aidoteam.bankaccount.model.IncomeEntity;
-import com.aidoteam.bankaccount.model.TransferTransactionEntity;
-import com.aidoteam.bankaccount.model.UserEntity;
-import com.aidoteam.bankaccount.model.WalletEntity;
-import com.aidoteam.bankaccount.repository.IncomeRepository;
-import com.aidoteam.bankaccount.repository.TransferTransactionRepository;
-import com.aidoteam.bankaccount.repository.UserRepository;
-import com.aidoteam.bankaccount.repository.WalletRepository;
+import com.aidoteam.bankaccount.model.*;
+import com.aidoteam.bankaccount.repository.*;
 import com.aidoteam.bankaccount.service.security.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +22,10 @@ public class WalletServiceImpl implements WalletService{
     private WalletRepository walletRepository;
     @Autowired
     private IncomeRepository incomeRepository;
-
+    @Autowired
+    private OutcomeTypeRepository outcomeTypeRepository;
+    @Autowired
+    private OutcomeRepository outcomeRepository;
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
@@ -44,7 +41,7 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
-    public void makeTransferTransaction(Long fromWalletId, Long toWalletId, String toAccount, Long amount, String description) {
+    public TransferTransactionEntity makeTransferTransaction(Long fromWalletId, Long toWalletId, String toAccount, Long amount, String description) {
 
         UserEntity userEntity = getMe(); //current user
 
@@ -77,6 +74,7 @@ public class WalletServiceImpl implements WalletService{
 
                 walletTo.setAmount(newToAmount);
                 walletRepository.save(walletTo);
+                return newTransaction;
 
 
             }else{
@@ -116,6 +114,17 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
+    public List<OutcomeEntity> findOutcomesByWalletIdAndOutcomeTypeIdBetweenDates(Long walletId, Long outcomeTypeId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
+        UserEntity owner = getMe();
+        WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
+        if (walletEntity != null) {
+            return   outcomeRepository.findByWalletIdAndOutcomeTypeIdBetweenDates(walletEntity.getId(), outcomeTypeId, datetimeFrom, datetimeTo);
+        }else{
+            throw new IllegalAccessException("No permission");
+        }
+    }
+
+    @Override
     public List<IncomeEntity> findIncomesByWalletIdBetweenDates(Long walletId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
         UserEntity owner = getMe();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
@@ -125,6 +134,56 @@ public class WalletServiceImpl implements WalletService{
             throw new IllegalAccessException("No permission");
         }
     }
+
+    @Override
+    public List<OutcomeEntity> findOutcomesByWalletIdBetweenDates(Long walletId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
+        UserEntity owner = getMe();
+        WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
+        if (walletEntity != null) {
+            return   outcomeRepository.findByWalletIdBetweenDates(walletEntity.getId(), datetimeFrom, datetimeTo);
+        }else{
+            throw new IllegalAccessException("No permission");
+        }
+    }
+
+    @Override
+    public OutcomeEntity makeOutcomePayment(Long walletId, String toAccount,Long amount,Long outcomeTypeId,String description) throws IllegalAccessException {
+        if (toAccount != null && !toAccount.equals("") && amount != null && amount > 0 && outcomeTypeId != null && description != null&& walletId != null) {
+            OutcomeTypeEntity outcomeTypeEntity = outcomeTypeRepository.findById(outcomeTypeId);
+            WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,getMe());
+            if(outcomeTypeEntity != null && walletEntity != null ) {
+                if(walletEntity.getAmount() > 0 && (walletEntity.getAmount() > amount)) {
+                    Long newWalletAmount = walletEntity.getAmount() - amount;
+
+                    OutcomeEntity outcomeEntity = new OutcomeEntity();
+                    outcomeEntity.setDatetime(System.currentTimeMillis());
+                    outcomeEntity.setAmount(amount);
+                    outcomeEntity.setAccountNumber(toAccount);
+                    outcomeEntity.setDescription(description);
+                    outcomeEntity.setOutcomeType(outcomeTypeEntity);
+                    outcomeEntity.setWallet(walletEntity);
+
+                    walletEntity.setAmount(newWalletAmount);
+                    outcomeRepository.save(outcomeEntity);
+                    walletRepository.save(walletEntity);
+                    return outcomeEntity;
+                }else{
+                    throw new IllegalAccessException("Your balance is lower than amount");
+                }
+            }else{
+                throw new IllegalAccessException("Wrong outcome type id");
+            }
+        }else{
+            throw new IllegalArgumentException("Wrong input parameters");
+        }
+    }
+
+    @Override
+    public List<OutcomeTypeEntity> getAllOutcomeTypes() {
+        List<OutcomeTypeEntity> outcomeTypeEntities = outcomeTypeRepository.findAll();
+        return outcomeTypeEntities;
+    }
+
 
     private UserEntity getMe(){
         String email = (String)authenticationFacade.getAuthentication().getPrincipal();

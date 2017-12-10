@@ -35,33 +35,7 @@ public class OutcomeServiceImpl implements OutcomeService{
        return outcomeRepository.findByWalletIdAndOutcomeTypeIdBetweenDates(walletId,outcomeTypeId,datetimeFrom,datetimeTo);
     }
 
-    @Override
-    public void create(Long walletId, String toAccount,Long amount,Long outcomeTypeId,String description) throws IllegalAccessException {
-        if (toAccount != null && !toAccount.equals("") && amount != null && amount > 0 && outcomeTypeId != null && description != null&& walletId != null) {
-            OutcomeTypeEntity outcomeTypeEntity = outcomeTypeRepository.findById(outcomeTypeId);
-            WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,getMe());
-            if(outcomeTypeEntity != null && walletEntity != null) {
-                Long newWalletAmount = walletEntity.getAmount() - amount;
 
-                OutcomeEntity outcomeEntity = new OutcomeEntity();
-                outcomeEntity.setDatetime(System.currentTimeMillis());
-                outcomeEntity.setAmount(amount);
-                outcomeEntity.setAccountNumber(toAccount);
-                outcomeEntity.setDescription(description);
-                outcomeEntity.setOutcomeType(outcomeTypeEntity);
-                outcomeEntity.setWallet(walletEntity);
-
-                walletEntity.setAmount(newWalletAmount);
-                outcomeRepository.save(outcomeEntity);
-                walletRepository.save(walletEntity);
-
-            }else{
-                throw new IllegalAccessException("Wrong outcome type id");
-            }
-        }else{
-            throw new IllegalArgumentException("Wrong input parameters");
-        }
-    }
 
     private UserEntity getMe(){
         String email = (String)authenticationFacade.getAuthentication().getPrincipal();
