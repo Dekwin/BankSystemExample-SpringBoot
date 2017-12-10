@@ -79,7 +79,7 @@ public class UserEntity {
         this.wallets = wallets;
     }
 
-    protected UserEntity() {}
+    public UserEntity() {}
 
     public UserEntity(String firstName, String lastName, String email, String password, String phone) {
         this.firstName = firstName;

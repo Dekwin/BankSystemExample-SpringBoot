@@ -1,15 +1,15 @@
 package com.aidoteam.bankaccount.controller;
 
+import com.aidoteam.bankaccount.model.UserEntity;
 import com.aidoteam.bankaccount.service.bank.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,10 +26,23 @@ public class AuthController {
                                        @JsonProperty("email") String email,
                                        @JsonProperty("password") String password,
                                        @JsonProperty("phone") String phone) {
+        System.out.println(password);
         String encodedPass = bCryptPasswordEncoder.encode(password);
         userService.create(firstName,lastName,email,encodedPass,phone);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+//    @ResponseBody
+//    @PostMapping(value = "/signup")
+//    public ResponseEntity registerUser(@RequestHeader Map<String, String> h, @RequestParam  Map<String, String> p ) {
+//        System.out.println(h.keySet());
+//        System.out.println("pars = "+p.keySet());
+//        System.out.println("pars = "+p.entrySet());
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+
+
+
 //
 //    //mock
 //    @RequestMapping(value = "/signin",  method = RequestMethod.POST)
