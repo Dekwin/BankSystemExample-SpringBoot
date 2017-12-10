@@ -1,5 +1,7 @@
 package com.aidoteam.bankaccount.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,8 +24,28 @@ public class UserEntity {
     private String phone;
 
     @OneToMany(mappedBy="owner")
+    @JsonManagedReference
     private List<WalletEntity> wallets;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public Long getId() {
         return id;

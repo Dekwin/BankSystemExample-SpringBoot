@@ -1,5 +1,7 @@
 package com.aidoteam.bankaccount.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,10 +24,12 @@ public class OutcomeEntity {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="WALLET_ID")
+    @JsonBackReference
     private WalletEntity wallet;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="OUTCOME_TYPE_ID")
+    @JsonBackReference
     private OutcomeTypeEntity outcomeType;
 
     public OutcomeEntity() {

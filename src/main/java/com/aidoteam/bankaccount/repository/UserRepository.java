@@ -8,5 +8,7 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
         UserEntity findByEmail(String email);
         List<UserEntity> findAllByFirstName(String firstName);
+        List<UserEntity> findByFirstNameIgnoreCaseContaining(String name);
+        List<UserEntity> findByEmailIgnoreCaseContaining(String name);
 }
 

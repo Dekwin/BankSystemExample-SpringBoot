@@ -1,48 +1,35 @@
 package com.aidoteam.bankaccount.controller;
 
-import com.aidoteam.bankaccount.model.UserEntity;
-import com.aidoteam.bankaccount.model.auth.UserAuthCredentialsEntity;
-import com.aidoteam.bankaccount.model.jwtauth.AccountCredentials;
-import com.aidoteam.bankaccount.model.jwtauth.AuthenticatedUser;
-import com.aidoteam.bankaccount.service.auth.JWTService;
 import com.aidoteam.bankaccount.service.bank.UserService;
-
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-//    @Autowired
-//    UserService userService;
-//    @Autowired
-//    JWTService jwtService;
+    @Autowired
+    UserService userService;
 
-//    @ResponseBody
-//    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-//    public ResponseEntity registerUser(@JsonProperty("firstName") String firstName,
-//                                       @JsonProperty("lastName") String lastName,
-//                                       @JsonProperty("email") String email,
-//                                       @JsonProperty("password") String password,
-//                                       @JsonProperty("phone") String phone) {
-//        userService.create(firstName,lastName,email,password,phone);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+
+    @ResponseBody
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ResponseEntity registerUser(@JsonProperty("firstName") String firstName,
+                                       @JsonProperty("lastName") String lastName,
+                                       @JsonProperty("email") String email,
+                                       @JsonProperty("password") String password,
+                                       @JsonProperty("phone") String phone) {
+        String encodedPass = bCryptPasswordEncoder.encode(password);
+        userService.create(firstName,lastName,email,encodedPass,phone);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 //
 //    //mock
 //    @RequestMapping(value = "/signin",  method = RequestMethod.POST)
@@ -86,6 +73,20 @@ public class AuthController {
 //
 //
 //        return new ResponseEntity<UserEntity>(user, HttpStatus.OK);
+//    }
+
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public AuthController(
+                          BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+//    @PostMapping("/signup")
+//    public void signUp(UserEntity user) {
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//        userService.save(user);
 //    }
 
 }

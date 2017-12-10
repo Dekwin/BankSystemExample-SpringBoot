@@ -1,5 +1,8 @@
 package com.aidoteam.bankaccount.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,6 +16,7 @@ public class WalletEntity {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="OWNER_ID")
+    @JsonBackReference
     private UserEntity owner;
 
     @Column(nullable = false)
@@ -26,18 +30,47 @@ public class WalletEntity {
     @Column(nullable = false)
     private String account;
 
-
     @OneToMany(mappedBy="senderWallet")
+    @JsonManagedReference
     private List<TransferTransactionEntity> sendTransactions;
 
     @OneToMany(mappedBy="recipientWallet")
+    @JsonManagedReference
     private List<TransferTransactionEntity> receiveTransactions;
 
     @OneToMany(mappedBy="wallet")
+    @JsonManagedReference
     private List<IncomeEntity> incomes;
 
     @OneToMany(mappedBy="wallet")
+    @JsonManagedReference
     private List<OutcomeEntity> outcomes;
+
+    public void setOwner(UserEntity owner) {
+        this.owner = owner;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+
 
     public Long getId() {
         return id;

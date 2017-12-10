@@ -13,4 +13,5 @@ public interface UserService {
     List<UserEntity> findAllByFirstName(String firstName);
     void create(String firstName,String lastName,String email,String password,String phone);
     UserEntity findByEmail(String email);
+    List<UserEntity> findByFirstNameOrEmail(String firstName, String email);
 }

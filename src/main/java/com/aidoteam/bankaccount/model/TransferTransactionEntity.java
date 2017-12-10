@@ -1,6 +1,8 @@
 package com.aidoteam.bankaccount.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,10 +15,12 @@ public class TransferTransactionEntity {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="SENDER_WALLET_ID")
+    @JsonBackReference
     private WalletEntity senderWallet;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="RECIPIENT_WALLET_ID")
+    @JsonBackReference
     private WalletEntity recipientWallet;
 
     @Column(nullable = false)

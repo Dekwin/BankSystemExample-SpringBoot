@@ -1,12 +1,16 @@
-package com.aidoteam.bankaccount.model.jwtauth;
+package com.aidoteam.bankaccount.model.security;
 
-/**
- * Created by igorkasyanenko on 04.03.17.
- */
-public class AccountCredentials {
-
+public class UserCredentials {
     private String email;
     private String password;
+
+    public UserCredentials(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserCredentials() {
+    }
 
     public String getEmail() {
         return email;
@@ -23,5 +27,4 @@ public class AccountCredentials {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

@@ -19,6 +19,38 @@ public class IncomeTypeEntity {
     @OneToMany(mappedBy="incomeType")
     private List<IncomeEntity> incomes;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<IncomeEntity> getIncomes() {
+        return incomes;
+    }
+
+    public void setIncomes(List<IncomeEntity> incomes) {
+        this.incomes = incomes;
+    }
+
     public IncomeTypeEntity() {
     }
 }
