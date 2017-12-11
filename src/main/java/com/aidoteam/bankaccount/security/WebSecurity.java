@@ -71,11 +71,20 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         methods.add("PUT");
         methods.add("DELETE");
         methods.add("PATCH");
+        methods.add("OPTIONS");
 
         List<String> headers = new ArrayList<>();
         headers.add("Authorization");
         headers.add("Cache-Control");
         headers.add("Content-Type");
+        headers.add("Access-Control-Allow-Headers");
+        headers.add("X-Requested-With");
+
+        List<String> exposeHeaders = new ArrayList<>();
+        exposeHeaders.add("Authorization");
+
+
+        configuration.setExposedHeaders(exposeHeaders);
 
         configuration.setAllowedOrigins(origins);
         configuration.setAllowedMethods(methods);
