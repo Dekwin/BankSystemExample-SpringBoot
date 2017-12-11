@@ -2,6 +2,7 @@ package com.aidoteam.bankaccount.controller;
 
 import com.aidoteam.bankaccount.model.UserEntity;
 import com.aidoteam.bankaccount.service.bank.UserService;
+import com.aidoteam.bankaccount.service.security.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AuthenticationFacade authenticationFacade;
+
 //    @RequestMapping(value = "", method = RequestMethod.GET)
 //    String getUsersByFirstName(@RequestParam("firstName") String firstName) {
 //        List<UserEntity> users = userService.findAllByFirstName(firstName);
@@ -32,4 +36,11 @@ public class UserController {
         List<UserEntity> users = userService.findByFirstNameOrEmail(firstName.isPresent() ? firstName.get() : null, email.isPresent() ? email.get() : null);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    ResponseEntity<UserEntity> getCurrentUser() {
+        UserEntity currentUser = authenticationFacade.getCurrentUser();
+        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+    }
+
 }
