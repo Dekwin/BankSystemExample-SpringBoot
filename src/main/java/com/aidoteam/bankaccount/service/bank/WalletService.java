@@ -17,4 +17,5 @@ public interface WalletService {
     OutcomeEntity makeOutcomePayment(Long walletId, String toAccount,Long amount,Long outcomeTypeId,String description) throws IllegalAccessException;
 
     List<OutcomeTypeEntity> getAllOutcomeTypes();
+    List<IncomeTypeEntity> getAllIncomeTypes();
 }

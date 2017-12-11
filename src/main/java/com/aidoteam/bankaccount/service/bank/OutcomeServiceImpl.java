@@ -16,14 +16,7 @@ import java.util.List;
 public class OutcomeServiceImpl implements OutcomeService{
     @Autowired
     private OutcomeRepository outcomeRepository;
-    @Autowired
-    private OutcomeTypeRepository outcomeTypeRepository;
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private WalletRepository walletRepository;
+
 
     @Override
     public List<OutcomeEntity> findByWalletIdBetweenDates(Long walletId, Long datetimeFrom, Long datetimeTo) {
@@ -35,12 +28,5 @@ public class OutcomeServiceImpl implements OutcomeService{
        return outcomeRepository.findByWalletIdAndOutcomeTypeIdBetweenDates(walletId,outcomeTypeId,datetimeFrom,datetimeTo);
     }
 
-
-
-    private UserEntity getMe(){
-        String email = (String)authenticationFacade.getAuthentication().getPrincipal();
-        UserEntity owner = userRepository.findByEmail(email);
-        return  owner;
-    }
 
 }

@@ -28,6 +28,8 @@ public class WalletServiceImpl implements WalletService{
     private OutcomeRepository outcomeRepository;
     @Autowired
     private IAuthenticationFacade authenticationFacade;
+    @Autowired
+    private IncomeTypeRepository incomeTypeRepository;
 
     @Override
     public WalletEntity findById(Long id) {
@@ -36,14 +38,14 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<WalletEntity> getOwnWallets() {
-        UserEntity owner = getMe();
+        UserEntity owner = authenticationFacade.getCurrentUser();
         return walletRepository.findByOwner(owner);
     }
 
     @Override
     public TransferTransactionEntity makeTransferTransaction(Long fromWalletId, Long toWalletId, String toAccount, Long amount, String description) {
 
-        UserEntity userEntity = getMe(); //current user
+        UserEntity userEntity = authenticationFacade.getCurrentUser(); //current user
 
         WalletEntity walletFrom = walletRepository.findByIdAndOwner(fromWalletId,userEntity);
         WalletEntity walletTo = null;
@@ -88,7 +90,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<TransferTransactionEntity> findTransferTransactionsBetweenDates(Long walletId, Long dateFrom, Long dateTo) {
-        UserEntity userEntity = getMe();
+        UserEntity userEntity = authenticationFacade.getCurrentUser();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,userEntity);
 
         List<TransferTransactionEntity> sentT = transferTransactionRepository.findBySenderWalletAndDatetimeBetween(walletEntity,dateFrom,dateTo);
@@ -103,7 +105,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<IncomeEntity> findIncomesByWalletIdAndIncomeTypeIdBetweenDates(Long walletId, Long incomeTypeId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
-        UserEntity owner = getMe();
+        UserEntity owner = authenticationFacade.getCurrentUser();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
         if (walletEntity != null) {
           return   incomeRepository.findByWalletIdAndIncomeTypeIdBetweenDates(walletEntity.getId(), incomeTypeId, datetimeFrom, datetimeTo);
@@ -115,7 +117,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<OutcomeEntity> findOutcomesByWalletIdAndOutcomeTypeIdBetweenDates(Long walletId, Long outcomeTypeId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
-        UserEntity owner = getMe();
+        UserEntity owner = authenticationFacade.getCurrentUser();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
         if (walletEntity != null) {
             return   outcomeRepository.findByWalletIdAndOutcomeTypeIdBetweenDates(walletEntity.getId(), outcomeTypeId, datetimeFrom, datetimeTo);
@@ -126,7 +128,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<IncomeEntity> findIncomesByWalletIdBetweenDates(Long walletId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
-        UserEntity owner = getMe();
+        UserEntity owner = authenticationFacade.getCurrentUser();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
         if (walletEntity != null) {
             return   incomeRepository.findByWalletIdBetweenDates(walletEntity.getId(), datetimeFrom, datetimeTo);
@@ -137,7 +139,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public List<OutcomeEntity> findOutcomesByWalletIdBetweenDates(Long walletId, Long datetimeFrom, Long datetimeTo) throws IllegalAccessException {
-        UserEntity owner = getMe();
+        UserEntity owner = authenticationFacade.getCurrentUser();
         WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,owner);
         if (walletEntity != null) {
             return   outcomeRepository.findByWalletIdBetweenDates(walletEntity.getId(), datetimeFrom, datetimeTo);
@@ -150,7 +152,7 @@ public class WalletServiceImpl implements WalletService{
     public OutcomeEntity makeOutcomePayment(Long walletId, String toAccount,Long amount,Long outcomeTypeId,String description) throws IllegalAccessException {
         if (toAccount != null && !toAccount.equals("") && amount != null && amount > 0 && outcomeTypeId != null && description != null&& walletId != null) {
             OutcomeTypeEntity outcomeTypeEntity = outcomeTypeRepository.findById(outcomeTypeId);
-            WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,getMe());
+            WalletEntity walletEntity = walletRepository.findByIdAndOwner(walletId,authenticationFacade.getCurrentUser());
             if(outcomeTypeEntity != null && walletEntity != null ) {
                 if(walletEntity.getAmount() > 0 && (walletEntity.getAmount() > amount)) {
                     Long newWalletAmount = walletEntity.getAmount() - amount;
@@ -184,12 +186,13 @@ public class WalletServiceImpl implements WalletService{
         return outcomeTypeEntities;
     }
 
-
-    private UserEntity getMe(){
-        String email = (String)authenticationFacade.getAuthentication().getPrincipal();
-        UserEntity owner = userRepository.findByEmail(email);
-        return  owner;
+    @Override
+    public List<IncomeTypeEntity> getAllIncomeTypes() {
+        List<IncomeTypeEntity> incomeTypeEntities = incomeTypeRepository.findAll();
+        return incomeTypeEntities;
     }
+
+
 
 
 }

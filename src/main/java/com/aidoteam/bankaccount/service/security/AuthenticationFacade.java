@@ -17,6 +17,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    @Override
     public UserEntity getCurrentUser(){
         String email = (String)getAuthentication().getPrincipal();
         UserEntity owner = userRepository.findByEmail(email);

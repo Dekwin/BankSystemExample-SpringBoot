@@ -88,6 +88,11 @@ public class WalletController {
         return new ResponseEntity<>(walletService.getAllOutcomeTypes(), HttpStatus.OK);
     }
 
+    @GetMapping("/income-types")
+    ResponseEntity<List<IncomeTypeEntity>> getIncomeTypes() throws IllegalAccessException {
+        return new ResponseEntity<>(walletService.getAllIncomeTypes(), HttpStatus.OK);
+    }
+
 
 
 

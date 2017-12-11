@@ -265,7 +265,7 @@ Authorization: `<token>`
 ## POST wallets/{walletId}/payment
 
 Оплата с кошелька на аккаунт toAccount 
-(например коммуналка)
+(например: коммуналка)
 
 ### Заголовок 
 Content-Type: application/json
@@ -317,7 +317,7 @@ Authorization: `<token>`
 ## GET wallets/outcome-types
 
 Получение типов оплат
-(например коммуналка, налог на авто)
+(например: коммуналка, налог на авто)
 
 ### Заголовок 
 Content-Type: application/json
@@ -351,19 +351,33 @@ Authorization: `<token>`
 ]
 ```
 
-## POST wallets/{fromWalletId}/transfer
+## GET wallets/income-types
 
-Перевод денег между кошельками, с кошелька с id = fromWalletId
+Получение типов пополнений кошелька
+(например: ЗП,пенсия)
 
 ### Заголовок 
 Content-Type: application/json
 
 Authorization: `<token>`
 ### Параметры
-- *required* **long** `toWalletId`. куда переводить (или toAccount)
-- *required* **string** `toAccount`. куда переводить (или toWalletId)
-- *required* **long** `amount`. сумма (или toWalletId)
-- *required* **string** `description`. описание перевода (или toWalletId)
 
 ### Формат ответа
-Статус код
+```
+[
+    {
+        "id": 5,
+        "title": "Пенсия",
+        "description": "пенсия месяц",
+        "incomes": []
+    },
+    {
+        "id": 6,
+        "title": "Зарплата",
+        "description": "ЗП месяц",
+        "incomes": []
+    }
+]
+```
+
+
