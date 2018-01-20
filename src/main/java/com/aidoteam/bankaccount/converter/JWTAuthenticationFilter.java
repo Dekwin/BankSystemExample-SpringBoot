@@ -50,7 +50,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             UserCredentials creds = new UserCredentials(req.getParameter("email"), req.getParameter("password"));
 
-        System.out.println(" ooo "+creds.getEmail());
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
